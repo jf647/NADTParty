@@ -42,16 +42,14 @@ function NP:PARTY_MEMBERS_CHANGED(event)
 	local current = GetLootMethod()
 	
 	if current == "freeforall" then return end
-	if GetNumRaidMembers() == 0 and GetNumPartyMembers == 0 then return end
+	if GetNumGroupMembers() == 0 then return end
 	
-	if NTL:IsGroupTrusted() then
-		if( UnitIsPartyLeader("player") ) then
+	if( UnitIsGroupLeader("player") ) then
+		if NTL:IsGroupTrusted() then
 			SetLootMethod("freeforall")
 		else
-			self:Print("cannot set FFA loot - not party leader")
+			self:Print("cannot set FFA loot - not everyone is trusted")
 		end
-	else
-		self:Print("cannot set FFA loot - not everyone is trusted")
 	end
 
 end
