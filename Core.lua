@@ -14,7 +14,7 @@ function NP:OnEnable()
 
 	-- change loot to FFA
 	if NP_DB.setffaloot then
-		self:RegisterEvent("PARTY_MEMBERS_CHANGED")
+		self:RegisterEvent("GROUP_ROSTER_UPDATE")
 	end
 
 	-- accept invites
@@ -37,19 +37,18 @@ function NP:PARTY_INVITE_REQUEST(event, sender)
 	end
 end
 
-function NP:PARTY_MEMBERS_CHANGED(event)
+function NP:GROUP_ROSTER_UPDATE(event)
 	
 	local current = GetLootMethod()
 	
 	if current == "freeforall" then return end
 	if GetNumGroupMembers() == 0 then return end
+	if not UnitIsGroupLeader("player") then return end
 	
-	if( UnitIsGroupLeader("player") ) then
-		if NTL:IsGroupTrusted() then
-			SetLootMethod("freeforall")
-		else
-			self:Print("cannot set FFA loot - not everyone is trusted")
-		end
+	if NTL:IsGroupTrusted() then
+		SetLootMethod("freeforall")
+	else
+		self:Print("cannot set FFA loot - not everyone is trusted")
 	end
 
 end
